@@ -5,9 +5,10 @@ class Drawer{
 	private $adjectiveManager;
 	private $x;
 	private $name;
-	public $height = 10;
+	private $height = 10;
+	private $gender;
 
-	public function __construct($name) {
+	public function __construct($name,$gender = 'm') {
 		$this->draw = new ImagickDraw();
 		$this->adjectiveManager = new AdjetiveManager();
 		$this->image = new Imagick();
@@ -15,8 +16,10 @@ class Drawer{
 		$height = 1080;
 		$this->image->newImage($width,$height,new ImagickPixel('#4679BD'));
 		$this->image->setImageFormat('png');
+		$this->draw->setFont('font.ttf');
 		$this->x = 100;
 		$this->name = $name;
+		$this->gender = $gender;
 	}
 
 	public function drawName() {
@@ -37,24 +40,35 @@ class Drawer{
 				$width = $x;
 			}
 		}
-		$this->image->cropImage($width+200,$this->height,0,0);
+		$this->image->cropImage($width+200,$this->height+60,0,0);
 	}
 
 	public function drawAdjective($char,$charX,$charWidth) {
 		$adjective = $this->adjectiveManager->getAdjectivetartWith($char);
-		$this->draw->setFillColor('#9CBBED');
-		$adjective = strtoupper($adjective);
-		$this->draw->setFontSize(30);
-		$adjectiveChars = str_split($adjective);
-		foreach ($adjectiveChars as $key => $adjectiveChar) {
-			if ($key==0){
-				continue;
+		if ($adjective!=null){
+			$adjective = strtoupper($adjective);
+			if ($this->gender==='f'){
+				if (strtoupper($adjective[strlen($adjective)-1]) === strtoupper('o')){
+					$adjective[strlen($adjective)-1] = 'a';
+				}
 			}
-			$y = 110+(($key-1)*40);
-			$this->image->annotateImage($this->draw,$charX+($charWidth/4),$y,90,$adjectiveChar);
-			if ($y > $this->height) {
-				$this->height = $y;
+			$this->draw->setFillColor('#9CBBED');
+			$adjective = strtoupper($adjective);
+			$this->draw->setFontSize(30);
+			$adjectiveChars = str_split($adjective);
+			foreach ($adjectiveChars as $key => $adjectiveChar) {
+				if ($key==0){
+					continue;
+				}
+				$y = 110+(($key-1)*40);
+				$metrics = $this->image->queryFontMetrics($this->draw,$adjectiveChar);
+				$width = $metrics['textWidth'];
+				$this->image->annotateImage($this->draw,$charX+($charWidth-30)/2,$y,90,$adjectiveChar);
+				if ($y > $this->height) {
+					$this->height = $y;
+				}
 			}
+
 		}
 	}
 	public function getImageBlob() {

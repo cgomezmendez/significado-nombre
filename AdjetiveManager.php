@@ -3,7 +3,7 @@ class AdjetiveManager{
 	private $adjectives;
 	public function __construct () {
 		$jsonadjectives = file_get_contents('adjetivos.json');
-		$this->adjectives = json_decode($jsonadjectives);
+		$this->adjectives = json_decode(utf8_decode($jsonadjectives));
 	}
 	public function getAdjectivetartWith($char) {
 		$adjectivesW = array();
