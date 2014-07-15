@@ -12,10 +12,12 @@ class AdjetiveManager{
 				array_push($adjectivesW, $adjective);
 			}
 		}
-		$key = rand(0,count($adjectivesW)-1);
-		$adjective = $adjectivesW[$key];
-		$key = array_search($adjective,$this->adjectives);
-		unset($this->adjectives[$key]);
-		return $adjective;
+		if (sizeof($adjectivesW) > 0){
+			$key = rand(0,(count($adjectivesW)-1));
+			$adjective = $adjectivesW[$key];
+			$key = array_search($adjective,$this->adjectives);
+			unset($this->adjectives[$key]);
+			return $adjective;
+		}
 	}
 }
