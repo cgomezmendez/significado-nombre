@@ -6,7 +6,14 @@ $gender = $_GET['gender'];
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Display</title>
+	<title>Averigua que significa tu nombre</title>
+	<meta property="og:title"
+content="!Ven y averigua que significa tu nombre!" />
+<meta property="og:site_name" content="No esperes mas,ya tus amigos lo estan haciendo,
+ven y averigua cuales son las cualidades con las que esta relacionado tu nombre"/>
+<meta property="article:author" content="https://www.facebook.com/cgomezmendz" />
+<meta property="og:image"
+content="image.php?name=<?php echo $name ?>&amp;gender=<?php echo $gender ?>" />
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 

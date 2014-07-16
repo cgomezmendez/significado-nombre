@@ -18,12 +18,12 @@
 			<legend>Averigua que significa tu nombre</legend>
 			
 			<div class="form-group">
-				<label for="">Nombre</label>
-				<input name="name" type="text" class="form-control" id="name" placeholder="Escribe tu nombre">
+				<label for="name">Nombre</label>
+				<input name="name" required type="text" class="form-control" id="name" placeholder="Escribe tu nombre">
 			</div>
 			<div class="radio">
 				<label>
-					<input type="radio" name="gender" id="input" value="m">
+					<input checked="true" type="radio" name="gender" id="input" value="m">
 					Hombre
 				</label>
 			</div>

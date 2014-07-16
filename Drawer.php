@@ -5,7 +5,7 @@ class Drawer{
 	private $adjectiveManager;
 	private $x;
 	private $name;
-	private $height = 10;
+	private $height;
 	private $gender;
 
 	public function __construct($name,$gender = 'm') {
@@ -18,7 +18,10 @@ class Drawer{
 		$this->image->setImageFormat('png');
 		$this->draw->setFont('font.ttf');
 		$this->x = 100;
-		$this->name = $name;
+		$this->name = strtolower($name);
+$search = explode(",","ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,e,i,ø,u");
+$replace = explode(",","c,ae,oe,a,e,i,o,u,a,e,i,o,u,a,e,i,o,u,y,a,e,i,o,u,a,e,i,o,u");
+$this->name = str_replace($search, $replace, $this->name);
 		$this->gender = $gender;
 	}
 
@@ -29,10 +32,8 @@ class Drawer{
 		foreach ($nameChars as $key => $nameChar) {
 			$this->draw->setFillColor('#FFFFDC');
 			$this->draw->setFontSize(100);
-			$x = 100+($this->x*$key);
-			if ($key == 0){
-				$x = 100;
-			}
+			$x = 5+($this->x*$key);
+			$this->draw->setFont('font.ttf');
 			$this->image->annotateImage($this->draw,$x,100,0,$nameChar);
 			$metrics = $this->image->queryFontMetrics($this->draw,$nameChar);
 			$this->drawAdjective($nameChar,$x,$metrics['textWidth']);
@@ -40,11 +41,13 @@ class Drawer{
 				$width = $x;
 			}
 		}
-		$this->image->cropImage($width+200,$this->height+60,0,0);
+		$this->image->cropImage($width+100,$this->height,0,0);
 	}
 
 	public function drawAdjective($char,$charX,$charWidth) {
+		$this->draw->setFont('font2.ttf');
 		$adjective = $this->adjectiveManager->getAdjectivetartWith($char);
+		$adjective = substr($adjective,1);
 		if ($adjective!=null){
 			$adjective = strtoupper($adjective);
 			if ($this->gender==='f'){
@@ -55,24 +58,17 @@ class Drawer{
 			$this->draw->setFillColor('#9CBBED');
 			$adjective = strtoupper($adjective);
 			$this->draw->setFontSize(30);
-			$adjectiveChars = str_split($adjective);
-			foreach ($adjectiveChars as $key => $adjectiveChar) {
-				if ($key==0){
-					continue;
-				}
-				$y = 110+(($key-1)*40);
-				$metrics = $this->image->queryFontMetrics($this->draw,$adjectiveChar);
-				$width = $metrics['textWidth'];
-				$this->image->annotateImage($this->draw,$charX+($charWidth-30)/2,$y,90,$adjectiveChar);
-				if ($y > $this->height) {
-					$this->height = $y;
-				}
+			$this->image->annotateImage($this->draw,$charX+$charWidth/3,110,90,$adjective);
+			$metrics = $this->image->queryFontMetrics($this->draw,$adjective);
+			$height = ($metrics['textHeight']+$metrics['descender'])+400;
+			if ($height > $this->height){
+				$this->height = $height;
 			}
-
 		}
 	}
 	public function getImageBlob() {
 		$this->drawName();
 		return $this->image;
 	}
+
 }
