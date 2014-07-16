@@ -41,6 +41,9 @@ $this->name = str_replace($search, $replace, $this->name);
 				$width = $x;
 			}
 		}
+		if (empty($name)){
+			$height = 0;
+		}
 		$this->image->cropImage($width+100,$this->height,0,0);
 	}
 
